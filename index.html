@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>James' Neighborhood Map</title>
+	<link rel="stylesheet" type="text/css" href="styles/style.css">
+</head>
+
+<body>
+	<div class= "container">
+		<header class= "header"> Neighborhood Map </header>
+		<div class= "main">
+			<div class= "navBar">
+				<ul class= "nav" data-bind="foreach: locationArray">
+					<li  data-bind="text: name, attr: {id: name}, click: $parent.getInfo"></li>
+				</ul>
+			</div>
+
+			<div id= "map"><div>
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
+	<script src = "Scripts/script.js"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCmUUPrEBbVbD1lRubC7zh8Tz5GGS0Wtmc&v=3&callback=initMap"></script>
+</body>
+
+</html>
