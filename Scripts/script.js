@@ -62,16 +62,22 @@ var locations = {
  		}
 	]
  };
-//var typeArray = Object.getOwnPropertyNames(locations);
+
 var Place = function(data) {
 	this.name = ko.observable(data.name);
 };
 
 var ViewModel = function() {
 	var self = this;
-	var someArray = Object.keys(locations);
+	
+	this.typeArray = ko.observableArray(["All", "Resturants", "Grocery Stores", "Misc"]);
 
 	this.locationArray = ko.observableArray([]);
+	locations.locations.forEach(function(loc) {
+		self.locationArray.push(new Place(loc));
+	});
+
+	this.typeValue = ko.observable();
 
 	this.getInfo = function(data, event) {
 		populateInfoWindowFromButton(data, event);
@@ -85,13 +91,14 @@ var ViewModel = function() {
 		buttonHoverOut(data, event);
 	}
 
-	locations.locations.forEach(function(loc) {
-		self.locationArray.push(new Place(loc));
-	});
+	this.filterSubmit = function(data, event) {
+		console.log(this.typeValue);
+	}
+
 };
 
 ko.applyBindings(new ViewModel);
-
+console.log()
 var map,
  	markers = [],
  	largeInfowindow,
@@ -241,7 +248,7 @@ function buttonHoverOut(data, event) {
 	}
 }
 
-function review(id) {
+/*function review(id) {
 	return new Promise(function(resolve, reject) {
 		var req = new XMLHttpRequest();
 		req.post('NclwD2eZ9eQE1qYpBnmdjA', 'xSyP8G4WMXHdzpPWn8J50YlgZo8H9UtMOgbCi2v54VTZ8SBTgGPwM66jj7KWk4vS');
@@ -258,7 +265,7 @@ review("nothing")
 })
 .catch(function(val) {
 	console.log(val);
-});
+});*/
 
 
 

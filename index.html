@@ -13,8 +13,10 @@
 		<header class= "header"> Neighborhood Map </header>
 		<div class= "main">
 			<div class= "navBar">
+				<select data-bind= "options: typeArray, value: typeValue"></select>
+				<input type= "button" value = "Filter" data-bind= "click: filterSubmit">
 				<ul class= "nav" data-bind="foreach: locationArray">
-					<li  data-bind="text: name, attr: {id: name}, click: $parent.getInfo"></li>
+					<li  data-bind="text: name, event: {mouseover: $parent.hoverButton, mouseout: $parent.hoverOutButton}, attr: {id: name}, click: $parent.getInfo"></li>
 				</ul>
 			</div>
 
@@ -22,6 +24,7 @@
 		</div>
 	</div>
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
 	<script src = "Scripts/script.js"></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCmUUPrEBbVbD1lRubC7zh8Tz5GGS0Wtmc&v=3&callback=initMap"></script>
