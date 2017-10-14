@@ -113,6 +113,7 @@ select {
 	margin: 10px;
 	text-align: center;
 	display: none;
+	float: left;
 }
 
 #nav-toggle:hover {
@@ -120,10 +121,14 @@ select {
 	color: blue;
 }
 
+.title {
+	float: right;
+}
+
 #map {
 	height: 600px;
 	margin-left: 5px;
-	z-index: 1;
+	z-index: 2;
 }
 
 #pano {
@@ -131,17 +136,22 @@ select {
     height: 200px;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (min-width: 601px) and (max-width: 800px) {
 	li {
 		font-size: 15px;
 	}
 
 	#map {
 		height: 400px;
+		z-index: 2;
+	}
+
+	.navBar {
+		display:inline-block;
 	}
 }
 
-@media screen and (max-width:600px) {
+@media screen and (max-width:650px) {
 	#nav-toggle {
 		display: inline-block;
 	}
@@ -149,6 +159,5 @@ select {
 	.navBar {
 		display: none;
 		width: 250px;
-		margin-top: 20px;
 	}
 }
