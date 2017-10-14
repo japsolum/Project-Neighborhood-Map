@@ -159,7 +159,7 @@ var map,
  	radius,
  	venueID,
  	baseURL = 'https://api.foursquare.com/v2/venues',
- 	foursquareID = "PAPBKB4JDQSPNZFTE2J5E2KVRVNUBISYTF42D3PGYRHMMXZW",
+ 	myFoursquareID = "PAPBKB4JDQSPNZFTE2J5E2KVRVNUBISYTF42D3PGYRHMMXZW",
  	foursquareSecret = "4TUCJDKUHWNW5MG5XFJKIGGGLLREXQJXVEKKH1EWIOGDEGYF",
  	foursquareVersion = "20170101";
 
@@ -171,7 +171,7 @@ function getRating(num) {
 		dataType: 'json',
 		method: 'GET',
 		data : {
-			client_id: foursquareID,
+			client_id: myFoursquareID,
 			client_secret: foursquareSecret,
 			v: foursquareVersion
 		}
@@ -344,13 +344,6 @@ function populateInfoWindow(marker, infowindow) {
     }
 }
 
-//Toggles between selected icons
-function toggleSelected(data) {
-	if (data.icon != defaultIcon) {
-
-	}
-
-}
 //Takes click event from ko.observable and populates info window on correct marker.
 function populateInfoWindowFromButton(data) {
    	id = event.target.id;
