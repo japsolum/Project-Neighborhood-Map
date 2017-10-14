@@ -73,6 +73,7 @@ var locations = {
 	]
  };
 
+//Creates a ko object out of data passed in by locations object
 var Place = function(data) {
 	this.name = ko.observable(data.name);
 	this.type = ko.observable(data.type);
@@ -83,27 +84,35 @@ var Place = function(data) {
 var ViewModel = function() {
 	var self = this;
 	
+	//Array that contains all types of location objects for use with select box.
 	this.typeArray = ko.observableArray(["All", "Restaurants", "Grocery Stores", "Misc"]);
 
+	//Value of select box, defaults to "All"
 	this.typeValue = ko.observable('All');
 
+	//Takes each locations object, creates a Place class object out of each one, 
+	//and places it into an array
 	this.locationArray = ko.observableArray([]);
 		for (var i = 0; i < locations.locations.length; i++) {
 			self.locationArray.push(new Place(locations.locations[i]));
 		}
 
+	//Populates info window for the marker that corresponds with button clicked.
 	this.getInfo = function(data, event) {
 		populateInfoWindowFromButton(data, event);
 	};
 
+	//Changes color of correcponding marker when button on mouseover event
 	this.hoverButton = function(data, event) {
 		buttonHoverIn(data, event);
 	};
 
+	//Changes color of correcponding marker when button on mouseout event
 	this.hoverOutButton = function(data, event) {
 		buttonHoverOut(data, event);
 	};
 
+	//Listens for select box to be changed and updates locationArray accordingly
 	this.selectChange = function() {
 		showLocations();
 		self.locationArray.removeAll();
@@ -120,8 +129,10 @@ var ViewModel = function() {
 		}
 	};
 
+	//Toggles navBar on click of menu button, also makes sure it appears 
+	//on top of map until closed
 	this.navBarToggle = function() {
-		$(".navBar").toggle();
+		$(".navBar").toggleClass('hideNavBar');
 		var mapElement = document.getElementById("map");
 		if (mapElement.style.zIndex != -1) {
 			mapElement.style.zIndex = -1;
@@ -134,6 +145,8 @@ var ViewModel = function() {
 
 ko.applyBindings(new ViewModel());
 
+//Declares all variables that would be used in multiple functions, or would
+//otherwise be declared within a loop.
 var map,
 	id,
 	object,
@@ -141,6 +154,7 @@ var map,
  	largeInfowindow,
  	defaultIcon,
  	highlightedIcon,
+ 	selectedIcon,
  	streetViewService,
  	radius,
  	venueID,
@@ -149,10 +163,9 @@ var map,
  	foursquareSecret = "4TUCJDKUHWNW5MG5XFJKIGGGLLREXQJXVEKKH1EWIOGDEGYF",
  	foursquareVersion = "20170101";
 
-//EVENT LISTENER FOR SELECT BOX
-
+//Ajax request to foursquare to retreive a buisness rating for a location.
 function getRating(num) {
-	venueID = locations.locations[num].foursquareID;
+	/*venueID = locations.locations[num].foursquareID;
 	object = $.ajax({
 		url : baseURL + '/' + venueID,
 		dataType: 'json',
@@ -165,13 +178,15 @@ function getRating(num) {
 
 	}).done(function(data) {
 		locations.locations[num].rating = data.response.venue.rating;
-	});
+	});*/
 }
 
+//Loops through all locations and adds rating value to object.
 for(var i = 0; i < locations.locations.length; i++) {
 	getRating(i);
 }
 
+//Initializes google map.
 function initMap() {
  	map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 39.340940, lng: -104.834341},
@@ -179,11 +194,14 @@ function initMap() {
         mapTypeControl: false
     });
 
+ 	//Sets values for what the default and highlighted icon should look like.
     defaultIcon = newMarker('FF0000');
     highlightedIcon = newMarker('0000FF');
+    selectedIcon = newMarker('E6A910');
     	
     largeInfowindow = new google.maps.InfoWindow();
 
+    //Loops though locations and creates a marker for each.
  	for (var i = 0; i < locations.locations.length; i++) {
  		var position = locations.locations[i].location,
  			title = locations.locations[i].name,
@@ -192,23 +210,25 @@ function initMap() {
             	position: position,
             	title: title,
             	animation: google.maps.Animation.DROP,
-            	image: imageSrc,
             	icon: defaultIcon,
             	id: i
           	});
 
         markers.push(marker);
 
+        //Adds listener on marker to display correct info window for each marker
         marker.addListener('click', (function(marker) {
         	return function() {
             	populateInfoWindow(this, largeInfowindow);
             };
         })(marker));
  
+ 		//Creates listener on marker to create hover effect for both the marker and the 
+ 		//corresponding button, and then a second for when marker is not being hoverd.
         marker.addListener('mouseover', (function(marker) {
         	return function() {
         		var locationName = this.title;
-        		marker.setIcon(highlightedIcon);
+
         		document.getElementById(locationName).style.color = "blue";
         		document.getElementById(locationName).style.boxShadow = "inset 2px 2px 3px 3px #bbbab7";
         	};
@@ -217,7 +237,11 @@ function initMap() {
     	marker.addListener('mouseout',(function(marker) {
         	return function() {
         		var locationName = this.title;
-        		marker.setIcon(defaultIcon);
+
+        		if (marker.icon.url === highlightedIcon.url) {
+        			marker.setIcon(defaultIcon);	
+        		}
+        		
         		document.getElementById(locationName).style.color = "white";
         		document.getElementById(locationName).style.boxShadow = "inset -2px -2px 3px 3px #bbbab7";
         	};
@@ -226,7 +250,8 @@ function initMap() {
 
  	showLocations();
 }
- 	
+
+//Decides which markers should be displayed and then shows them. 	
 function showLocations() {
 	var bounds = new google.maps.LatLngBounds(),
 		selectValue = document.getElementById("filterBox").value,
@@ -252,6 +277,7 @@ function showLocations() {
 	}
 }
 
+//Function that takes a color and returns a marker of that color
 function newMarker(markerColor) {
     var markerImage = new google.maps.MarkerImage(
         'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
@@ -263,12 +289,19 @@ function newMarker(markerColor) {
     return markerImage;
 }
 
+//Makes sure there are no errors with api requests and displays info window accordingly.
 function populateInfoWindow(marker, infowindow) {
     if (infowindow.marker != marker) {
         infowindow.setContent('');
         infowindow.marker = marker;
+        for (var i = 0; i < markers.length; i++) {
+        	markers[i].setIcon(defaultIcon);
+        }
+
+        marker.setIcon(selectedIcon);
 
         infowindow.addListener('closeclick', function() {
+        	marker.setIcon(defaultIcon);
         	infowindow.marker = null;
         });
         streetViewService = new google.maps.StreetViewService();
@@ -311,7 +344,15 @@ function populateInfoWindow(marker, infowindow) {
     }
 }
 
-function populateInfoWindowFromButton(data, event) {
+//Toggles between selected icons
+function toggleSelected(data) {
+	if (data.icon != defaultIcon) {
+
+	}
+
+}
+//Takes click event from ko.observable and populates info window on correct marker.
+function populateInfoWindowFromButton(data) {
    	id = event.target.id;
 
    	for(var i = 0; i < markers.length; i++) {
@@ -321,23 +362,30 @@ function populateInfoWindowFromButton(data, event) {
    	}
 }
 
-function buttonHoverIn(data, event) {
+//Takes hover event from ko.observable and displays hover effects to correct marker.
+function buttonHoverIn(data) {
 	id = event.target.id;
 
 	for (var i = 0; i < markers.length; i++) {
 		if (id === markers[i].title) {
-			markers[i].setIcon(highlightedIcon);
+			if (markers[i].icon.url === defaultIcon.url) {
+				markers[i].setIcon(highlightedIcon);
+			}
+			
 		}
 	}
 
 }
 
-function buttonHoverOut(data, event) {
+//Returns marker to default color after mouseout event
+function buttonHoverOut(data) {
 	id = event.target.id;
 
 	for (var i = 0; i < markers.length; i++) {
 		if (id === markers[i].title) {
-			markers[i].setIcon(defaultIcon);
+			if (markers[i].icon.url === highlightedIcon.url) {
+				markers[i].setIcon(defaultIcon);
+			}
 		}
 	}
 }

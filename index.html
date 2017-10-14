@@ -11,7 +11,7 @@
 <body>
 	<div class= "container">
 		<div class= "left">
-			<div class= "navBar">
+			<div class= "navBar hideNavBar">
 				<select id= "filterBox" data-bind= "options: typeArray, value: typeValue, event: {change: selectChange}"></select>
 				<ul class= "nav" data-bind="foreach: locationArray">
 					<li  data-bind="text: name, event: {mouseover: $parent.hoverButton, mouseout: $parent.hoverOutButton, click: $parent.getInfo}, attr: {id: name}"></li>
@@ -19,7 +19,7 @@
 			</div>
 		</div>
 		<div class="right">
-			<div>
+			<div class= "headerBar">
 				<div id="nav-toggle" data-bind= "event: {click: navBarToggle}">&#9776;</div>
 				<header class= "header">Neighborhood Map</header>
 			</div>
