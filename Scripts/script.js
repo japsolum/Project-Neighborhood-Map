@@ -119,6 +119,17 @@ var ViewModel = function() {
 			}
 		}
 	};
+
+	this.navBarToggle = function() {
+		$(".navBar").toggle();
+		var mapElement = document.getElementById("map");
+		if (mapElement.style.zIndex != -1) {
+			mapElement.style.zIndex = -1;
+		} else {
+			mapElement.style.zIndex = 1;
+		}
+
+	};
 };
 
 ko.applyBindings(new ViewModel());
@@ -198,8 +209,8 @@ function initMap() {
         	return function() {
         		var locationName = this.title;
         		marker.setIcon(highlightedIcon);
-        		document.getElementById(locationName).style.color = "cyan";
-        		document.getElementById(locationName).style.boxShadow = "inset 0px 0px 6px 3px white";
+        		document.getElementById(locationName).style.color = "blue";
+        		document.getElementById(locationName).style.boxShadow = "inset 2px 2px 3px 3px #bbbab7";
         	};
     	})(marker));
 
@@ -208,7 +219,7 @@ function initMap() {
         		var locationName = this.title;
         		marker.setIcon(defaultIcon);
         		document.getElementById(locationName).style.color = "white";
-        		document.getElementById(locationName).style.boxShadow = "inset 0px 0px 6px 3px slategrey";
+        		document.getElementById(locationName).style.boxShadow = "inset -2px -2px 3px 3px #bbbab7";
         	};
     	})(marker));
  	}
@@ -264,11 +275,20 @@ function populateInfoWindow(marker, infowindow) {
         radius = 75;
 
         function getStreetView(data, status) {
+        	
+        	var ratingContent;
+        	id = marker.id;
+        	if (locations.locations[id].rating != "") {
+        		ratingContent = '<a href = "https://foursquare.com/">Foursquare Rating:</a><span class="rating">' + locations.locations[marker.id].rating + ' / 10 </span>';
+        	} else {
+        		ratingContent = '<span> There was an error loading <a href = "https://foursquare.com/">Foursquare</a> rating.</span>';
+        	}
+
             if (status == google.maps.StreetViewStatus.OK) {
 	            var nearStreetViewLocation = data.location.latLng;
             	var heading = google.maps.geometry.spherical.computeHeading(
                 nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div class= "infoHeader">' +  marker.title + '</div><hr><div class="infoText"><a href = "https://foursquare.com/">Foursquare Rating:</a><span class="rating">' + locations.locations[marker.id].rating + ' / 10 </span><hr></div><div id="pano"></div>');
+                infowindow.setContent('<div class= "infoHeader">' +  marker.title + '</div><hr><div class="infoText">' + ratingContent + '</div><hr><div id="pano"></div>');
 
                 var panoramaOptions = {
                 	position: nearStreetViewLocation,
@@ -282,7 +302,7 @@ function populateInfoWindow(marker, infowindow) {
                 document.getElementById('pano'), panoramaOptions);
               	panorama.setVisible(true);
             } else {
-            	infowindow.setContent('<div class= "infoHeader">' +  marker.title + '</div><hr><div class="infoText"><a href = "https://foursquare.com/">Foursquare Rating:</a><span class="rating">' + locations.locations[marker.id].rating + ' / 10 </span><hr><div>No Street View Found</div>');
+            	infowindow.setContent('<div class= "infoHeader">' +  marker.title + '</div><hr><div class="infoText">' + ratingContent + '</div><hr><div>No Street View Found</div>');
             }
         }
         streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
@@ -321,6 +341,7 @@ function buttonHoverOut(data, event) {
 		}
 	}
 }
+
 
 
 

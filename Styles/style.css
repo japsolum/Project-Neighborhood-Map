@@ -1,44 +1,52 @@
+
 body {
-	background-color: black;
+	background-color: #171510;
 }
+
 ul {
+	background-color: #171510;
 	list-style: none;
 	padding: 0px;
 	margin: 0px;
 }
 
 li {
+	color: white;
 	text-align: center;
 	padding: 8px;
-	box-shadow: inset 0px 0px 6px 3px slategrey;
+	box-shadow: inset -2px -2px 3px 3px #bbbab7;
 	margin-left: 5px;
-	margin-right: 10px;
-	border: solid 1px black;
+	border: solid 1px #171510;
 }
 
 li:hover {
-	box-shadow: inset 0px 0px 6px 3px white;
-	color: cyan;
+	box-shadow: inset 2px 2px 3px 3px #bbbab7;
+	color: blue;
 	cursor: pointer;
 }
 
 select {
+	color: white;
+	background-color: #171510;
 	width: 95%;
 	margin-left: 5px;
 	margin-right: 10px;
 }
 
+.error {
+	font-style: italic;
+}
+
 .container {
+	display: flex;
 	width: 100%;
-	max-width: 1100px;
-	background-color: black;
-	padding: 10px;
+	max-width: 1000px;
 	margin: auto;
 }
 
 .header {
 	color: white;
-	text-shadow: 2px 2px 4px slategrey;
+	text-shadow: 2px 2px 4px lightslategrey;
 	text-align: center;
 	width: 100%;
 	font-size: 35px;
@@ -46,14 +54,18 @@ select {
 	padding: 25px;
 }
 
-.main {
-	display: flex;
+.left {
+	width: calc((100% / 5) - 20px);
+}
+
+.right {
+	width: calc((100% / 5) * 4 - 20px);
+	padding: 5px;
 }
 
 .navBar {
-	width: calc((100% / 5) - 20px);
-	padding: auto;
-	color: white;
+	margin-top: 100px;
+	padding-right: 0px;
 }
 
 .filterContainer {
@@ -70,7 +82,6 @@ select {
 	margin-left: 25px;
 	border: solid 1px slategrey;
 	border-radius: 20px;
-	display: none;
 }
 
 .infoHeader {
@@ -91,13 +102,53 @@ select {
 	border-radius: 5px;
 }
 
+#nav-toggle {
+	color: white;
+	box-shadow: inset -2px -2px 3px 3px #bbbab7;
+	border-radius: 5px;
+	font-size: 30px;
+	width: 40px;
+	height: 40px; 
+	padding: 4px;
+	margin: 10px;
+	text-align: center;
+	display: none;
+}
+
+#nav-toggle:hover {
+	box-shadow: inset 2px 2px 3px 3px #bbbab7;
+	color: blue;
+}
+
 #map {
-	width: calc((100% / 5) * 4 - 20px);
-	height: 700px;
-	margin: 5px;
+	height: 600px;
+	margin-left: 5px;
+	z-index: 1;
 }
 
 #pano {
     width: 200px;
     height: 200px;
+}
+
+@media screen and (max-width: 800px) {
+	li {
+		font-size: 15px;
+	}
+
+	#map {
+		height: 400px;
+	}
+}
+
+@media screen and (max-width:600px) {
+	#nav-toggle {
+		display: inline-block;
+	}
+
+	.navBar {
+		display: none;
+		width: 250px;
+		margin-top: 20px;
+	}
 }

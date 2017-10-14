@@ -10,23 +10,23 @@
 
 <body>
 	<div class= "container">
-		<header class= "header"> Neighborhood Map </header>
-		<div class= "main">
+		<div class= "left">
+			<div id="nav-toggle" data-bind= "event: {click: navBarToggle}">&#9776;</div>
 			<div class= "navBar">
 				<select id= "filterBox" data-bind= "options: typeArray, value: typeValue, event: {change: selectChange}"></select>
 				<ul class= "nav" data-bind="foreach: locationArray">
-					<li  data-bind="text: name, event: {mouseover: $parent.hoverButton, mouseout: $parent.hoverOutButton}, attr: {id: name}, click: $parent.getInfo"></li>
+					<li  data-bind="text: name, event: {mouseover: $parent.hoverButton, mouseout: $parent.hoverOutButton, click: $parent.getInfo}, attr: {id: name}"></li>
 				</ul>
 			</div>
-
-			<div id= "map"><div>
+		</div>
+		<div class="right">
+			<header class= "header"> Neighborhood Map </header>
+			<div id= "map"></div>
 		</div>
 	</div>
-
+</body>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
 	<script src = "Scripts/script.js"></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCmUUPrEBbVbD1lRubC7zh8Tz5GGS0Wtmc&v=3&callback=initMap"></script>
-</body>
-
 </html>
