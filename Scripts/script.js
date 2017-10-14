@@ -165,7 +165,7 @@ var map,
 
 //Ajax request to foursquare to retreive a buisness rating for a location.
 function getRating(num) {
-	/*venueID = locations.locations[num].foursquareID;
+	venueID = locations.locations[num].foursquareID;
 	object = $.ajax({
 		url : baseURL + '/' + venueID,
 		dataType: 'json',
@@ -178,7 +178,7 @@ function getRating(num) {
 
 	}).done(function(data) {
 		locations.locations[num].rating = data.response.venue.rating;
-	});*/
+	});
 }
 
 //Loops through all locations and adds rating value to object.
