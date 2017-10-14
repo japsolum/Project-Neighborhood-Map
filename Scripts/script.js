@@ -2,118 +2,173 @@ var locations = {
  	"locations" : [
  		{
  			"name" : "Chili's",
- 			"type" : "Resturaunt",
+ 			"type" : "Restaurants",
  			"location" : {lat: 39.413115, lng: -104.871146},
- 			"yelpID" : "chilis-castle-rock"
+ 			"foursquareID" : "4bbdecd0a8cf76b0f255b2fd",
+ 			"rating" : ""
  		},
  		{
  			"name" : "Outback",
- 			"type" : "Resturaunt",
+ 			"type" : "Restaurants",
  			"location" : {lat: 39.407199, lng: -104.862636},
- 			"yelpID" : "outback-steakhouse-castle-rock"
+ 			"foursquareID" : "4b4d1ce4f964a52078cb26e3",
+ 			"rating" : ""
  		},
  		{
  			"name" : "Village Inn",
- 			"type" : "Resturaunt",
+ 			"type" : "Restaurants",
  			"location" : {lat: 39.380436, lng: -104.864787},
- 			"yelpID" : "village-inn-castle-rock-3"
+ 			"foursquareID" : "4bb9493d7421a59312b2c240",
+ 			"rating" : ""
  		},
  		{
  			"name" : "Walmart",
- 			"type" : "Grocery",
+ 			"type" : "Grocery Stores",
  			"location" : {lat: 39.406218, lng: -104.860948},
- 			"yelpID" : "walmart-supercenter-castle-rock"
+ 			"foursquareID" : "4b130478f964a520bf9223e3",
+ 			"rating" : ""
  		},
  		{
  			"name" : "King Soopers",
- 			"type" : "Grocery",
+ 			"type" : "Grocery Stores",
  			"location" : {lat: 39.4158589, lng: -104.8802941},
- 			"yelpID" : ""
+ 			"foursquareID" : "590a5aa3ad1ea47d2dd4a4e5",
+ 			"rating" : ""
  		},
  		{
  			"name" : "Sprouts",
- 			"type" : "Grocery",
+ 			"type" : "Grocery Stores",
  			"location" : {lat: 39.415228, lng: -104.863347},
- 			"yelpID" : "sprouts-farmers-market-castle-rock"
+ 			"foursquareID" : "4b797f39f964a520cbfc2ee3",
+ 			"rating" : ""
  		},
  		{
  			"name" : "Safeway",
- 			"type" : "Grocery",
+ 			"type" : "Grocery Stores",
  			"location" : {lat: 39.361930, lng: -104.860977},
- 			"yelpID" : "safeway-food-and-drug-castle-rock-3"
+ 			"foursquareID" : "4bcb9addfb84c9b668401f3e",
+ 			"rating" : ""
  		},
  		{
  			"name" : "Home Depot",
  			"type" : "Misc",
  			"location" : {lat: 39.415343, lng: -104.865925},
- 			"yelpID" : "the-home-depot-castle-rock"
+ 			"foursquareID" : "4bd204049854d13a53c1fa4d",
+ 			"rating" : ""
  		},
  		{
  			"name" : "PetSmart",
  			"type" : "Misc",
  			"location" : {lat: 39.4073852697085, lng: -104.8632410802915},
- 			"yelpID" : "petsmart-castle-rock"
+ 			"foursquareID" : "4bc7b88614d79521600368e9",
+ 			"rating" : ""
  		},
  		{
  			"name" : "Castle Rock Outlets",
  			"type" : "Misc",
  			"location" : {lat: 39.415464, lng: -104.873549},
- 			"yelpID" : "outlets-at-castle-rock-castle-rock"
+ 			"foursquareID" : "4b0ed46df964a520a75b23e3",
+ 			"rating" : ""
  		}
 	]
  };
 
 var Place = function(data) {
 	this.name = ko.observable(data.name);
+	this.type = ko.observable(data.type);
+	this.location = ko.observable(data.location);
+	this.fsID = ko.observable(data.foursquareID);
 };
 
 var ViewModel = function() {
 	var self = this;
 	
-	this.typeArray = ko.observableArray(["All", "Resturants", "Grocery Stores", "Misc"]);
+	this.typeArray = ko.observableArray(["All", "Restaurants", "Grocery Stores", "Misc"]);
+
+	this.typeValue = ko.observable('All');
 
 	this.locationArray = ko.observableArray([]);
-	locations.locations.forEach(function(loc) {
-		self.locationArray.push(new Place(loc));
-	});
-
-	this.typeValue = ko.observable();
+		for (var i = 0; i < locations.locations.length; i++) {
+			self.locationArray.push(new Place(locations.locations[i]));
+		}
 
 	this.getInfo = function(data, event) {
 		populateInfoWindowFromButton(data, event);
-	}
+	};
 
 	this.hoverButton = function(data, event) {
 		buttonHoverIn(data, event);
-	}
+	};
 
 	this.hoverOutButton = function(data, event) {
 		buttonHoverOut(data, event);
-	}
+	};
 
-	this.filterSubmit = function(data, event) {
-		console.log(this.typeValue);
-	}
-
+	this.selectChange = function() {
+		showLocations();
+		self.locationArray.removeAll();
+		if(self.typeValue() === "All") {
+			for (var i = 0; i < locations.locations.length; i++) {
+				self.locationArray.push(new Place(locations.locations[i]));
+			}
+		} else {
+			for (var n = 0; n < locations.locations.length; n++) {
+				if (self.typeValue() === locations.locations[n].type) {
+					self.locationArray.push(new Place(locations.locations[n]));
+				}
+			}
+		}
+	};
 };
 
-ko.applyBindings(new ViewModel);
-console.log()
+ko.applyBindings(new ViewModel());
+
 var map,
+	id,
+	object,
  	markers = [],
  	largeInfowindow,
  	defaultIcon,
- 	highlightedIcon;
+ 	highlightedIcon,
+ 	streetViewService,
+ 	radius,
+ 	venueID,
+ 	baseURL = 'https://api.foursquare.com/v2/venues',
+ 	foursquareID = "PAPBKB4JDQSPNZFTE2J5E2KVRVNUBISYTF42D3PGYRHMMXZW",
+ 	foursquareSecret = "4TUCJDKUHWNW5MG5XFJKIGGGLLREXQJXVEKKH1EWIOGDEGYF",
+ 	foursquareVersion = "20170101";
+
+//EVENT LISTENER FOR SELECT BOX
+
+function getRating(num) {
+	venueID = locations.locations[num].foursquareID;
+	object = $.ajax({
+		url : baseURL + '/' + venueID,
+		dataType: 'json',
+		method: 'GET',
+		data : {
+			client_id: foursquareID,
+			client_secret: foursquareSecret,
+			v: foursquareVersion
+		}
+
+	}).done(function(data) {
+		locations.locations[num].rating = data.response.venue.rating;
+	});
+}
+
+for(var i = 0; i < locations.locations.length; i++) {
+	getRating(i);
+}
 
 function initMap() {
  	map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 39.340940, lng: -104.834341},
         zoom: 13,
-        //styles: styles,
         mapTypeControl: false
     });
 
-    defaultIcon = newMarker('FF0000'),
+    defaultIcon = newMarker('FF0000');
     highlightedIcon = newMarker('0000FF');
     	
     largeInfowindow = new google.maps.InfoWindow();
@@ -121,33 +176,39 @@ function initMap() {
  	for (var i = 0; i < locations.locations.length; i++) {
  		var position = locations.locations[i].location,
  			title = locations.locations[i].name,
+ 			imageSrc = locations.locations[i].imageSrc,
  			marker = new google.maps.Marker({
             	position: position,
             	title: title,
             	animation: google.maps.Animation.DROP,
+            	image: imageSrc,
             	icon: defaultIcon,
             	id: i
           	});
 
         markers.push(marker);
 
-        marker.addListener('click', function() {
-            populateInfoWindow(this, largeInfowindow);
-        });
+        marker.addListener('click', (function(marker) {
+        	return function() {
+            	populateInfoWindow(this, largeInfowindow);
+            };
+        })(marker));
  
         marker.addListener('mouseover', (function(marker) {
         	return function() {
-        		var locationName = marker.title;
+        		var locationName = this.title;
         		marker.setIcon(highlightedIcon);
         		document.getElementById(locationName).style.color = "cyan";
+        		document.getElementById(locationName).style.boxShadow = "inset 0px 0px 6px 3px white";
         	};
     	})(marker));
 
     	marker.addListener('mouseout',(function(marker) {
         	return function() {
-        		var locationName = marker.title;
+        		var locationName = this.title;
         		marker.setIcon(defaultIcon);
         		document.getElementById(locationName).style.color = "white";
+        		document.getElementById(locationName).style.boxShadow = "inset 0px 0px 6px 3px slategrey";
         	};
     	})(marker));
  	}
@@ -156,13 +217,28 @@ function initMap() {
 }
  	
 function showLocations() {
-	var bounds = new google.maps.LatLngBounds();
+	var bounds = new google.maps.LatLngBounds(),
+		selectValue = document.getElementById("filterBox").value,
+		markerID;
+	console.log(selectValue);
 
-	for (var i = 0; i < markers.length; i++) {
-		markers[i].setMap(map);
-		bounds.extend(markers[i].position);
+	if (selectValue === "All") {
+		for (var i = 0; i < markers.length; i++) {
+			markers[i].setMap(map);
+			bounds.extend(markers[i].position);
+		}
+		map.fitBounds(bounds);
+	} else  {
+		for (var n = 0; n < markers.length; n++) {
+			markerID = markers[n].id;
+			if (selectValue === locations.locations[markerID].type) {
+				markers[n].setMap(map);
+				bounds.extend(markers[n].position);
+			} else {
+				markers[n].setMap(null);
+			}
+		}
 	}
-	map.fitBounds(bounds);
 }
 
 function newMarker(markerColor) {
@@ -184,15 +260,15 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.addListener('closeclick', function() {
         	infowindow.marker = null;
         });
-        var streetViewService = new google.maps.StreetViewService();
-        var radius = 50;
+        streetViewService = new google.maps.StreetViewService();
+        radius = 75;
 
         function getStreetView(data, status) {
             if (status == google.maps.StreetViewStatus.OK) {
 	            var nearStreetViewLocation = data.location.latLng;
             	var heading = google.maps.geometry.spherical.computeHeading(
                 nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+                infowindow.setContent('<div class= "infoHeader">' +  marker.title + '</div><hr><div class="infoText"><a href = "https://foursquare.com/">Foursquare Rating:</a><span class="rating">' + locations.locations[marker.id].rating + ' / 10 </span><hr></div><div id="pano"></div>');
 
                 var panoramaOptions = {
                 	position: nearStreetViewLocation,
@@ -206,12 +282,9 @@ function populateInfoWindow(marker, infowindow) {
                 document.getElementById('pano'), panoramaOptions);
               	panorama.setVisible(true);
             } else {
-            	infowindow.setContent('<div>' + marker.title + '</div>' +
-                '<div>No Street View Found</div>');
+            	infowindow.setContent('<div class= "infoHeader">' +  marker.title + '</div><hr><div class="infoText"><a href = "https://foursquare.com/">Foursquare Rating:</a><span class="rating">' + locations.locations[marker.id].rating + ' / 10 </span><hr><div>No Street View Found</div>');
             }
         }
-        // Use streetview service to get the closest streetview image within
-        // 50 meters of the markers position
         streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
         // Open the infowindow on the correct marker.
         infowindow.open(map, marker);
@@ -219,53 +292,36 @@ function populateInfoWindow(marker, infowindow) {
 }
 
 function populateInfoWindowFromButton(data, event) {
-   	var id = event.target.id;
+   	id = event.target.id;
 
-   	for (marker of markers) {
-   		if (id === marker.title) {
-   			populateInfoWindow(marker, largeInfowindow);
+   	for(var i = 0; i < markers.length; i++) {
+   		if (id === markers[i].title) {
+   			populateInfoWindow(markers[i], largeInfowindow);
    		}
    	}
 }
 
 function buttonHoverIn(data, event) {
-	var id = event.target.id;
+	id = event.target.id;
 
-	for (marker of markers) {
-		if (id === marker.title) {
-			marker.setIcon(highlightedIcon);
+	for (var i = 0; i < markers.length; i++) {
+		if (id === markers[i].title) {
+			markers[i].setIcon(highlightedIcon);
 		}
 	}
+
 }
 
 function buttonHoverOut(data, event) {
-	var id = event.target.id;
+	id = event.target.id;
 
-	for (marker of markers) {
-		if (id === marker.title) {
-			marker.setIcon(defaultIcon);
+	for (var i = 0; i < markers.length; i++) {
+		if (id === markers[i].title) {
+			markers[i].setIcon(defaultIcon);
 		}
 	}
 }
 
-/*function review(id) {
-	return new Promise(function(resolve, reject) {
-		var req = new XMLHttpRequest();
-		req.post('NclwD2eZ9eQE1qYpBnmdjA', 'xSyP8G4WMXHdzpPWn8J50YlgZo8H9UtMOgbCi2v54VTZ8SBTgGPwM66jj7KWk4vS');
-			req.open('GET', 'https://api.yelp.com/v3/businesses/chilis-castle-rock&Bearer ' + req.response);
-			//var obj = JSON.parse(req);
-			req.onload = resolve("success the buisness rating is " + req.rating);
-			req.onerror = reject("there was an error");
-			req.send();
-	})
-};
-review("nothing")
-.then(function(val) {
-	console.log(val);
-})
-.catch(function(val) {
-	console.log(val);
-});*/
 
 
 

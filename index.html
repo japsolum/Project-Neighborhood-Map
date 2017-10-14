@@ -13,8 +13,7 @@
 		<header class= "header"> Neighborhood Map </header>
 		<div class= "main">
 			<div class= "navBar">
-				<select data-bind= "options: typeArray, value: typeValue"></select>
-				<input type= "button" value = "Filter" data-bind= "click: filterSubmit">
+				<select id= "filterBox" data-bind= "options: typeArray, value: typeValue, event: {change: selectChange}"></select>
 				<ul class= "nav" data-bind="foreach: locationArray">
 					<li  data-bind="text: name, event: {mouseover: $parent.hoverButton, mouseout: $parent.hoverOutButton}, attr: {id: name}, click: $parent.getInfo"></li>
 				</ul>

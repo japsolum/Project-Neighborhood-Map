@@ -1,3 +1,6 @@
+body {
+	background-color: black;
+}
 ul {
 	list-style: none;
 	padding: 0px;
@@ -8,14 +11,21 @@ li {
 	text-align: center;
 	padding: 8px;
 	box-shadow: inset 0px 0px 6px 3px slategrey;
-	margin: 5px;
-	border-radius: 20px;
+	margin-left: 5px;
+	margin-right: 10px;
+	border: solid 1px black;
 }
 
 li:hover {
 	box-shadow: inset 0px 0px 6px 3px white;
 	color: cyan;
 	cursor: pointer;
+}
+
+select {
+	width: 95%;
+	margin-left: 5px;
+	margin-right: 10px;
 }
 
 .container {
@@ -31,7 +41,7 @@ li:hover {
 	text-shadow: 2px 2px 4px slategrey;
 	text-align: center;
 	width: 100%;
-	font-size: 25px;
+	font-size: 35px;
 	font-weight: bold;
 	padding: 25px;
 }
@@ -61,6 +71,24 @@ li:hover {
 	border: solid 1px slategrey;
 	border-radius: 20px;
 	display: none;
+}
+
+.infoHeader {
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.infoText {
+	text-align: center;
+}
+
+.rating {
+	padding: 4px;
+	margin: 3px;
+	font-size: 18px;
+	background-color: #e2dddd;
+	border-radius: 5px;
 }
 
 #map {
