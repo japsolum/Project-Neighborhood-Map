@@ -165,7 +165,7 @@ var map,
 
 //Ajax request to foursquare to retreive a buisness rating for a location.
 function getRating(num) {
-	venueID = locations.locations[num].foursquareID;
+	/*venueID = locations.locations[num].foursquareID;
 	object = $.ajax({
 		url : baseURL + '/' + venueID,
 		dataType: 'json',
@@ -178,7 +178,7 @@ function getRating(num) {
 
 	}).done(function(data) {
 		locations.locations[num].rating = data.response.venue.rating;
-	});
+	});*/
 }
 
 //Loops through all locations and adds rating value to object.
@@ -307,7 +307,15 @@ function populateInfoWindow(marker, infowindow) {
         streetViewService = new google.maps.StreetViewService();
         radius = 75;
 
-        function getStreetView(data, status) {
+        //getStreetView(data, status);
+        
+        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView(marker));
+        // Open the infowindow on the correct marker.
+        infowindow.open(map, marker);
+    }
+}
+
+function getStreetView(marker, data, status) {
         	
         	var ratingContent;
         	id = marker.id;
@@ -338,11 +346,6 @@ function populateInfoWindow(marker, infowindow) {
             	infowindow.setContent('<div class= "infoHeader">' +  marker.title + '</div><hr><div class="infoText">' + ratingContent + '</div><hr><div>No Street View Found</div>');
             }
         }
-        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-        // Open the infowindow on the correct marker.
-        infowindow.open(map, marker);
-    }
-}
 
 //Takes click event from ko.observable and populates info window on correct marker.
 function populateInfoWindowFromButton(data) {
