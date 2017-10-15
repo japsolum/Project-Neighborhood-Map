@@ -165,7 +165,7 @@ var map,
 
 //Ajax request to foursquare to retreive a buisness rating for a location.
 function getRating(num) {
-	/*venueID = locations.locations[num].foursquareID;
+	venueID = locations.locations[num].foursquareID;
 	object = $.ajax({
 		url : baseURL + '/' + venueID,
 		dataType: 'json',
@@ -178,7 +178,7 @@ function getRating(num) {
 
 	}).done(function(data) {
 		locations.locations[num].rating = data.response.venue.rating;
-	});*/
+	});
 }
 
 //Loops through all locations and adds rating value to object.
@@ -217,7 +217,7 @@ function initMap() {
         markers.push(marker);
 
         //Adds listener on marker to display correct info window for each marker
-        marker.addListener('click', (function(marker) {
+        /*marker.addListener('click', (function(marker) {
         	return function() {
             	populateInfoWindow(this, largeInfowindow);
             };
@@ -245,7 +245,7 @@ function initMap() {
         		document.getElementById(locationName).style.color = "white";
         		document.getElementById(locationName).style.boxShadow = "inset -2px -2px 3px 3px #bbbab7";
         	};
-    	})(marker));
+    	})(marker));*/
  	}
 
  	showLocations();
@@ -307,19 +307,11 @@ function populateInfoWindow(marker, infowindow) {
         streetViewService = new google.maps.StreetViewService();
         radius = 75;
 
-        //getStreetView(data, status);
-        
-        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView(marker));
-        // Open the infowindow on the correct marker.
-        infowindow.open(map, marker);
-    }
-}
-
-function getStreetView(marker, data, status) {
+        /*function getStreetView(data, status) {
         	
         	var ratingContent;
         	id = marker.id;
-        	if (locations.locations[id].rating != "") {
+        	if (locations.locations[id].rating !== "") {
         		ratingContent = '<a href = "https://foursquare.com/">Foursquare Rating:</a><span class="rating">' + locations.locations[marker.id].rating + ' / 10 </span>';
         	} else {
         		ratingContent = '<span> There was an error loading <a href = "https://foursquare.com/">Foursquare</a> rating.</span>';
@@ -345,7 +337,12 @@ function getStreetView(marker, data, status) {
             } else {
             	infowindow.setContent('<div class= "infoHeader">' +  marker.title + '</div><hr><div class="infoText">' + ratingContent + '</div><hr><div>No Street View Found</div>');
             }
-        }
+        }*/
+        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+        // Open the infowindow on the correct marker.
+        infowindow.open(map, marker);
+    }
+}
 
 //Takes click event from ko.observable and populates info window on correct marker.
 function populateInfoWindowFromButton(data) {
