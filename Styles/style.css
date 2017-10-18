@@ -14,9 +14,8 @@ li {
 	color: white;
 	text-align: center;
 	padding: 8px;
+	margin: 0px;
 	box-shadow: inset -2px -2px 3px 3px #bbbab7;
-	margin-left: 5px;
-	border: solid 1px #171510;
 }
 
 li:hover {
@@ -28,13 +27,16 @@ li:hover {
 select {
 	color: white;
 	background-color: #171510;
-	width: 95%;
 	margin-left: 5px;
 	margin-right: 10px;
+	width: 95%;
+	margin-top: 90px;
+	margin-bottom: 10px;
 }
 
 header {
 	margin: auto;
+	padding: 15px;
 }
 
 .error {
@@ -42,10 +44,10 @@ header {
 }
 
 .container {
-	display: flex;
 	width: 100%;
 	max-width: 1000px;
 	margin: auto;
+	display: flex;
 }
 
 .headerBar {
@@ -68,9 +70,7 @@ header {
 }
 
 .navBar {
-	margin-top: 90px;
 	padding-right: 0px;
-	visibility: visible;
 }
 
 .filterContainer {
@@ -150,10 +150,6 @@ header {
 		height: 400px;
 		z-index: 1;
 	}
-
-	.navBar {
-		visibility: visible;
-	}
 }
 
 @media screen and (max-width:650px) {
@@ -164,15 +160,6 @@ header {
 	#map {
 		height: 400px;
 	}
-
-	.navBar {
-		width: 250px;
-	}
-
-	.hideNavBar {
-		transform: translateX(-300px);
-	}
-
 	.headerBar {
 		font-size: 25px;
 	}
