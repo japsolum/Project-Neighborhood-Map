@@ -216,37 +216,53 @@ function initMap() {
 
         markers.push(marker);
 
-        //Adds listener on marker to display correct info window for each marker
-        /*marker.addListener('click', (function(marker) {
-        	return function() {
-            	populateInfoWindow(this, largeInfowindow);
-            };
-        })(marker));
- 
- 		//Creates listener on marker to create hover effect for both the marker and the 
- 		//corresponding button, and then a second for when marker is not being hoverd.
-        marker.addListener('mouseover', (function(marker) {
+        marker.addListener('click', markerClick); 
+ 		marker.addListener('mouseover', markerHoverIn);
+        /*marker.addListener('mouseover', (function(marker) {
         	return function() {
         		var locationName = this.title;
+
+        		if (marker.icon.url === defaultIcon.url) {
+        			marker.setIcon(highlightedIcon);	
+        		}
 
         		document.getElementById(locationName).style.color = "blue";
         		document.getElementById(locationName).style.boxShadow = "inset 2px 2px 3px 3px #bbbab7";
         	};
-    	})(marker));
-
-    	marker.addListener('mouseout',(function(marker) {
-        	return function() {
-        		var locationName = this.title;
-
-        		if (marker.icon.url === highlightedIcon.url) {
-        			marker.setIcon(defaultIcon);	
-        		}
-        		
-        		document.getElementById(locationName).style.color = "white";
-        		document.getElementById(locationName).style.boxShadow = "inset -2px -2px 3px 3px #bbbab7";
-        	};
-    	})(marker));*/
+    	})(marker)); */
+    	marker.addListener('mouseout', markerHoverOut);
  	}
+
+ 	//Adds listener on marker to display correct info window for each marker
+	function markerClick(marker) {
+	    populateInfoWindow(this, largeInfowindow);
+	}
+
+	//Creates listener on marker to create hover effect for both the marker and the 
+ 	//corresponding button
+	function markerHoverIn(marker) {
+		var locationName = this.title;
+
+	    if (this.icon.url === defaultIcon.url) {
+	    	this.setIcon(highlightedIcon);	
+	    }
+
+	    document.getElementById(locationName).style.color = "blue";
+	    document.getElementById(locationName).style.boxShadow = "inset 2px 2px 3px 3px #bbbab7";
+	}
+
+	//Creates listener on marker to remove hover effect for both the marker and the 
+ 	//corresponding button
+	function markerHoverOut(marker) {
+	    var locationName = this.title;
+
+	    if (this.icon.url === highlightedIcon.url) {
+	    	this.setIcon(defaultIcon);	
+	    }
+	        		
+	    document.getElementById(locationName).style.color = "white";
+	    document.getElementById(locationName).style.boxShadow = "inset -2px -2px 3px 3px #bbbab7";
+	}
 
  	showLocations();
 }
@@ -256,7 +272,6 @@ function showLocations() {
 	var bounds = new google.maps.LatLngBounds(),
 		selectValue = document.getElementById("filterBox").value,
 		markerID;
-	console.log(selectValue);
 
 	if (selectValue === "All") {
 		for (var i = 0; i < markers.length; i++) {
@@ -307,7 +322,7 @@ function populateInfoWindow(marker, infowindow) {
         streetViewService = new google.maps.StreetViewService();
         radius = 75;
 
-        /*function getStreetView(data, status) {
+        var getStreetView = function(data, status) {
         	
         	var ratingContent;
         	id = marker.id;
@@ -337,7 +352,7 @@ function populateInfoWindow(marker, infowindow) {
             } else {
             	infowindow.setContent('<div class= "infoHeader">' +  marker.title + '</div><hr><div class="infoText">' + ratingContent + '</div><hr><div>No Street View Found</div>');
             }
-        }*/
+        };
         streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
         // Open the infowindow on the correct marker.
         infowindow.open(map, marker);
@@ -382,6 +397,10 @@ function buttonHoverOut(data) {
 		}
 	}
 }
+
+
+
+
 
 
 
