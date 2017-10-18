@@ -16,6 +16,7 @@ li {
 	padding: 8px;
 	margin: 0px;
 	box-shadow: inset -2px -2px 3px 3px #bbbab7;
+	margin: 2px;
 }
 
 li:hover {
