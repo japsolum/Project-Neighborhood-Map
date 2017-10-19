@@ -67,7 +67,7 @@ var locations = {
  			"name" : "Castle Rock Outlets",
  			"type" : "Misc",
  			"location" : {lat: 39.415464, lng: -104.873549},
- 			"foursquareID" : "4b0ed46df964a520a75b23e3",
+ 			"foursquareID" : "4b0ed46df964a520a75b23e3", 
  			"rating" : ""
  		}
 	]
@@ -132,14 +132,7 @@ var ViewModel = function() {
 	//Toggles navBar on click of menu button, also makes sure it appears 
 	//on top of map until closed
 	this.navBarToggle = function() {
-		$(".navBar").toggleClass('hideNavBar');
-		var mapElement = document.getElementById("map");
-		if (mapElement.style.zIndex != -1) {
-			mapElement.style.zIndex = -1;
-		} else {
-			mapElement.style.zIndex = 1;
-		}
-
+		navToggle();
 	};
 };
 
@@ -178,6 +171,8 @@ function getRating(num) {
 
 	}).done(function(data) {
 		locations.locations[num].rating = data.response.venue.rating;
+	}).fail(function(error) {
+		window.alert("There was an error retreiving rating data from foursquare for " + locations.locations[num].name + ".");
 	});
 }
 
@@ -329,7 +324,7 @@ function populateInfoWindow(marker, infowindow) {
         	if (locations.locations[id].rating !== "") {
         		ratingContent = '<a href = "https://foursquare.com/">Foursquare Rating:</a><span class="rating">' + locations.locations[marker.id].rating + ' / 10 </span>';
         	} else {
-        		ratingContent = '<span> There was an error loading <a href = "https://foursquare.com/">Foursquare</a> rating.</span>';
+        		ratingContent = 'There was an error loading <a href = "https://foursquare.com/">Foursquare</a> rating.';
         	}
 
             if (status == google.maps.StreetViewStatus.OK) {
@@ -397,6 +392,16 @@ function buttonHoverOut(data) {
 		}
 	}
 }
+
+function mapError(error) {
+	window.alert("There was an error while loading Google Maps");
+}
+
+function navToggle() {
+    $(".left").toggleClass("hidden-xs col-xs-12");
+    $("#map").toggleClass("col-xs-12 hidden-xs");
+}
+
 
 
 

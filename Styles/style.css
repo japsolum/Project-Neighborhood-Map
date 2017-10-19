@@ -16,7 +16,6 @@ li {
 	padding: 8px;
 	margin: 0px;
 	box-shadow: inset -2px -2px 3px 3px #bbbab7;
-	margin: 2px;
 }
 
 li:hover {
@@ -28,11 +27,7 @@ li:hover {
 select {
 	color: white;
 	background-color: #171510;
-	margin-left: 5px;
-	margin-right: 10px;
-	width: 95%;
-	margin-top: 90px;
-	margin-bottom: 10px;
+	width: 100%;
 }
 
 header {
@@ -40,34 +35,35 @@ header {
 	padding: 15px;
 }
 
-.error {
-	font-style: italic;
-}
-
 .container {
-	width: 100%;
 	max-width: 1000px;
 	margin: auto;
-	display: flex;
+}
+
+.leftHeader {
+	text-align: center;
+}
+
+.toggleNav {
+	color: white;
+	width: 45px;
+	font-size: 35px;
+	margin-top: 7px;
+	box-shadow: inset -2px -2px 3px 3px #bbbab7;
+}
+
+.toggleNav:hover {
+	box-shadow: inset 2px 2px 3px 3px #bbbab7;
+	color: blue;
+	cursor: pointer;
 }
 
 .headerBar {
-	display: flex;
 	color: white;
 	text-shadow: 2px 2px 4px lightslategrey;
 	text-align: center;
-	width: 100%;
 	font-size: 35px;
 	font-weight: bold;
-}
-
-.left {
-	width: calc((100% / 5) - 20px);
-}
-
-.right {
-	width: calc((100% / 5) * 4 - 20px);
-	padding: 5px;
 }
 
 .navBar {
@@ -108,33 +104,8 @@ header {
 	border-radius: 5px;
 }
 
-#nav-toggle {
-	color: white;
-	box-shadow: inset -2px -2px 3px 3px #bbbab7;
-	border-radius: 5px;
-	font-size: 30px;
-	width: 40px;
-	height: 40px; 
-	padding: 4px;
-	margin: 10px;
-	text-align: center;
-	display: none;
-	float: left;
-}
-
-#nav-toggle:hover {
-	box-shadow: inset 2px 2px 3px 3px #bbbab7;
-	color: blue;
-}
-
-.title {
-	float: right;
-}
-
 #map {
 	height: 600px;
-	margin-left: 5px;
-	z-index: 1;
 }
 
 #pano {
@@ -142,26 +113,26 @@ header {
     height: 200px;
 }
 
-@media screen and (min-width: 601px) and (max-width: 800px) {
+.left.col-xs-12 {
+	font-size: 20px;
+}
+
+@media screen and (min-width: 692px) and (max-width: 800px) {
 	li {
 		font-size: 15px;
 	}
 
 	#map {
 		height: 400px;
-		z-index: 1;
 	}
 }
 
-@media screen and (max-width:650px) {
-	#nav-toggle {
-		display: inline-block !important;
-	}
-
+@media screen and (max-width:691px) {
 	#map {
 		height: 400px;
 	}
 	.headerBar {
 		font-size: 25px;
 	}
+
 }

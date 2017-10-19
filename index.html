@@ -5,29 +5,37 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>James' Neighborhood Map</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
 
 <body>
-	<div class= "container">
-		<div class= "left">
-			<div class= "navBar hideNavBar">
-				<select id= "filterBox" data-bind= "options: typeArray, value: typeValue, event: {change: selectChange}"></select>
-				<ul class= "nav" data-bind="foreach: locationArray">
-					<li  data-bind="text: name, event: {mouseover: $parent.hoverButton, mouseout: $parent.hoverOutButton, click: $parent.getInfo}, attr: {id: name}"></li>
-				</ul>
+	<div class= "container container-fluid">
+		<div class = "row">
+			<div class = "leftHeader col-xs-1 hidden-sm hidden-md hidden-lg">
+				<div class = "toggleNav" data-bind = "event: {click: navBarToggle}">&#9776</div>
+			</div>
+			<div class = "rightHeader col-xs-11 col-sm-12">
+				<header class = "headerBar"> Neighborhood Map </header>
 			</div>
 		</div>
-		<div class = "right">
-			<div class= "headerBar">
-				<header class= "header">Neighborhood Map</header>
+		<div class="row">
+			<div class= "left col-sm-3 hidden-xs">
+				<div class= "navBar">
+					<select id= "filterBox" data-bind= "options: typeArray, value: typeValue, event: {change: selectChange}"></select>
+					<ul class= "nav" data-bind="foreach: locationArray">
+						<li data-bind="text: name, event: {mouseover: $parent.hoverButton, mouseout: $parent.hoverOutButton, click: $parent.getInfo}, attr: {id: name}"></li>
+					</ul>
+				</div>
 			</div>
-			<div id= "map"></div>
+			<div class = "right col-sm-9 col-xs-12">
+				<div id= "map"></div>
+			</div>
 		</div>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
 	<script src = "Scripts/script.js"></script>
-	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCmUUPrEBbVbD1lRubC7zh8Tz5GGS0Wtmc&v=3&callback=initMap"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCmUUPrEBbVbD1lRubC7zh8Tz5GGS0Wtmc&v=3&callback=initMap" onerror = "mapError()"></script>
 </body>
 </html>
