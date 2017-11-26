@@ -13,8 +13,9 @@ ul {
 li {
 	color: white;
 	text-align: center;
-	padding: 8px;
+	padding: 10px;
 	margin: 0px;
+	margin-top: 5px;
 	box-shadow: inset -2px -2px 3px 3px #bbbab7;
 }
 
